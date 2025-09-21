@@ -1,8 +1,6 @@
 import os
 import re
 import google.generativeai as genai
-from dotenv import load_dotenv
-load_dotenv()
 
 class AIReviewer:
     def __init__(self):
@@ -10,7 +8,9 @@ class AIReviewer:
         if not api_key:
             raise ValueError("Please set the GOOGLE_API_KEY environment variable")
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+
+        # Use get_model instead of GenerativeModel
+        self.model = genai.get_model("gemini-1.5")
 
     def review_diff(self, filename: str, diff: str) -> dict:
         """Send code diff to Gemini for review and return feedback + numeric score."""
@@ -34,9 +34,9 @@ Please provide review feedback in this format:
   7-8 = Good, mostly clean
   9-10 = Excellent, ready to merge
 """
-
         try:
-            response = self.model.generate_content(prompt)
+            # Use generate_text instead of generate_content
+            response = self.model.generate_text(prompt)
             text = response.text.strip()
 
             # Split comments and score
