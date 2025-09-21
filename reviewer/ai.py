@@ -9,8 +9,12 @@ class AIReviewer:
             raise ValueError("Please set the GOOGLE_API_KEY environment variable")
         genai.configure(api_key=api_key)
 
+        models = genai.list_models()
+        for m in models:
+            print(m.name)
+
         # Use get_model instead of GenerativeModel
-        self.model = genai.get_model("models/text-bison-001")
+        self.model = genai.get_model("VALID_MODEL_NAME_FROM_LIST")
 
     def review_diff(self, filename: str, diff: str) -> dict:
         """Send code diff to Gemini for review and return feedback + numeric score."""
