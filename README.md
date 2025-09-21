@@ -3,7 +3,7 @@
 A web app for automated code review of pull requests using AI.  
 Supports GitHub, GitLab, and Bitbucket PRs. Built with FastAPI, Jinja2, and Google Generative AI.
 
-![PR Reviewer Screenshot](https://raw.githubusercontent.com/yourusername/yourrepo/main/webapp/static/img/image.png)
+![PR Reviewer Screenshot](https://raw.githubusercontent.com/asterisk51/PR-review-agent/main/webapp/static/img/image.png)
 
 ## Features
 
