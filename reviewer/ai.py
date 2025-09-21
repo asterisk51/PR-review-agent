@@ -10,7 +10,7 @@ class AIReviewer:
         genai.configure(api_key=api_key)
 
         # Use get_model instead of GenerativeModel
-        self.model = genai.get_model("gemini-1.5")
+        self.model = genai.get_model("models/text-bison-001")
 
     def review_diff(self, filename: str, diff: str) -> dict:
         """Send code diff to Gemini for review and return feedback + numeric score."""
