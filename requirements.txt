@@ -4,3 +4,4 @@ jinja2
 google-generativeai
 requests
 python-multipart
+python-dotenv
