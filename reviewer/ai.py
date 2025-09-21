@@ -9,12 +9,8 @@ class AIReviewer:
             raise ValueError("Please set the GOOGLE_API_KEY environment variable")
         genai.configure(api_key=api_key)
 
-        models = genai.list_models()
-        for m in models:
-            print(m.name)
-
-        # Use get_model instead of GenerativeModel
-        self.model = genai.get_model("VALID_MODEL_NAME_FROM_LIST")
+        # ✅ Use GenerativeModel directly
+        self.model = genai.GenerativeModel("gemini-1.5-flash")
 
     def review_diff(self, filename: str, diff: str) -> dict:
         """Send code diff to Gemini for review and return feedback + numeric score."""
@@ -39,13 +35,19 @@ Please provide review feedback in this format:
   9-10 = Excellent, ready to merge
 """
         try:
-            # Use generate_text instead of generate_content
-            response = self.model.generate_text(prompt)
-            text = response.text.strip()
+            # ✅ Use generate_content instead of generate_text
+            response = self.model.generate_content(prompt)
+
+            # Gemini sometimes returns list of candidates; pick the text safely
+            text = response.text.strip() if hasattr(response, "text") else str(response)
 
             # Split comments and score
             parts = text.split("### Code Quality Score")
-            comments = parts[0].replace("### Review Comments", "").strip() if len(parts) > 0 else "No comments"
+            comments = (
+                parts[0].replace("### Review Comments", "").strip()
+                if len(parts) > 0
+                else "No comments"
+            )
 
             # Extract numeric score using regex
             raw_score = parts[1].strip() if len(parts) > 1 else "N/A"
