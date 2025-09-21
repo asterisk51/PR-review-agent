@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PR Eyes</title>
+  <link rel="stylesheet" href="{{ request.url_for('static', path='css/style.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">PR Eyes</div>
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Pull Request Lookup</a>
+      <a href="#">AI Reports</a>
+      <a href="#">Settings</a>
+    </nav>
+    <button class="review-btn">Review a PR Now</button>
+  </header>
+
+  <!-- Hero / Form Section -->
+  <section class="hero">
+    <h1>AI-Powered PR Review Agent</h1>
+    <p>Automate your pull request reviews with intelligent code analysis, quality scoring, and actionable insights. Seamlessly integrate with GitHub, GitLab, and Bitbucket.</p>
+    
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <!-- Single unified form -->
+   <form method="POST" class="review-form">
+  <select name="provider" required>
+    <option value="github">GitHub</option>
+    <option value="gitlab">GitLab</option>
+    <option value="bitbucket">Bitbucket</option>
+  </select>
+
+  <input type="text" name="repo" placeholder="owner/repo (e.g. facebook/react)" required>
+  <input type="number" name="pr" placeholder="PR number" required>
+  <button type="submit">Start Reviewing</button>
+</form>
+
+  </section>
+
+  <!-- Review Results -->
+  <section class="recent">
+    <h2>Review Results</h2>
+
+    {% if feedback_results %}
+      <div class="results-grid">
+        {% for result in feedback_results %}
+          <div class="result-card">
+            <div class="result-header">
+              <span>{{ result.filename }}</span>
+              <span class="badge {{ score_color(result.score) }}">
+                {{ result.score if result.score else "N/A" }}
+              </span>
+            </div>
+
+            <div class="result-title">{{ result.status }}</div>
+
+            <div class="score-section">
+              <div class="score-label">Code Quality Score</div>
+              <div class="score-value">
+                {{ result.score if result.score else "N/A" }}/10
+              </div>
+              <div class="progress-bar">
+                <div class="progress {{ score_color(result.score) }}"
+                     style="width: {{ (result.score|default(0)|float * 10)|int }}%;">
+                </div>
+              </div>
+            </div>
+
+            <div class="feedback">
+              <h4>AI Feedback</h4>
+              <ul class="feedback-list">
+                {% for line in result.comments.split('- ') if line.strip() %}
+                  <li>{{ line.strip() }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No PR reviewed yet. Submit a repo + PR number above.</p>
+    {% endif %}
+  </section>
+</body>
+</html>
