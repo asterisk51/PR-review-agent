@@ -1,6 +1,8 @@
 import os
 import re
 import google.generativeai as genai
+from dotenv import load_dotenv
+load_dotenv()
 
 class AIReviewer:
     def __init__(self):
