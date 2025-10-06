@@ -16,8 +16,8 @@ Supports GitHub, GitLab, and Bitbucket PRs. Built with FastAPI, Jinja2, and Goog
 
 1. **Clone the repo**
    ```sh
-   git clone https://github.com/yourusername/yourrepo.git
-   cd yourrepo
+   git clone https://github.com/astrisk/PR-review-agent.git
+   cd PR-review-agent
    ```
 
 2. **Install dependencies**
