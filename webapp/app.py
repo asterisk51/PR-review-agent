@@ -18,16 +18,16 @@ from dotenv import load_dotenv
 # --- Load environment variables ---
 load_dotenv() 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITLAB_TOKEN = os.getenv("GITLAB_TOKEN")
-BITBUCKET_USER = os.getenv("BITBUCKET_USER")
-BITBUCKET_APP_PASS = os.getenv("BITBUCKET_APP_PASS")
+# GITLAB_TOKEN = os.getenv("GITLAB_TOKEN")
+# BITBUCKET_USER = os.getenv("BITBUCKET_USER")
+# BITBUCKET_APP_PASS = os.getenv("BITBUCKET_APP_PASS")
 
 if not GITHUB_TOKEN:
     raise RuntimeError("GITHUB_TOKEN environment variable is missing!")
-if not GITLAB_TOKEN:
-     raise RuntimeError("GITLAB_TOKEN environment variable is missing!")
-if not BITBUCKET_USER or not BITBUCKET_APP_PASS:
-     raise RuntimeError("Bitbucket credentials are missing!")
+# if not GITLAB_TOKEN:
+#      raise RuntimeError("GITLAB_TOKEN environment variable is missing!")
+# if not BITBUCKET_USER or not BITBUCKET_APP_PASS:
+#      raise RuntimeError("Bitbucket credentials are missing!")
 
 #keep alive
 @asynccontextmanager
