@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from reviewer.git_clients import GitHubClient, GitLabClient, BitbucketClient
 from reviewer.ai import AIReviewer
+from contextlib import asynccontextmanager
+import asyncio, os, httpx
 
 ai_reviewer = AIReviewer()
 
@@ -27,8 +29,26 @@ if not GITLAB_TOKEN:
 if not BITBUCKET_USER or not BITBUCKET_APP_PASS:
      raise RuntimeError("Bitbucket credentials are missing!")
 
+#keep alive
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async def ping_forever():
+        while True:
+            try:
+                url = os.environ.get("RENDER_EXTERNAL_URL")
+                if url:
+                    async with httpx.AsyncClient(timeout=10) as client:
+                        await client.get(url)
+            except Exception:
+                pass
+            await asyncio.sleep(600)
+
+    task = asyncio.create_task(ping_forever())
+    yield
+    task.cancel()
+
 # --- FastAPI setup ---
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 static_dir = os.path.join(os.path.dirname(__file__), "static")
 templates_dir = os.path.join(os.path.dirname(__file__), "templates")
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
